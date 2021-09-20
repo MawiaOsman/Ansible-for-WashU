@@ -6,9 +6,11 @@ The files in this repository were used to configure the network depicted below.
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the configuration file may be used to install only certain pieces of it, such as Filebeat.
 
-  - [Ansible Playbook](ansible.cfg)
-  - [Ansible Hosts File](hosts)
-  - [Elk Playbook](elk.yml)
+[Ansible Playbook](ansible.cfg)
+
+[Ansible Hosts File](hosts)
+
+[Elk Playbook](elk.yml)
 
 This document contains the following details:
 - Description of the Topology
@@ -73,6 +75,8 @@ The playbook implements the following tasks:
 
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
+| CONTAINER ID  |  IMAGE     | COMMAND   |  NAME |
+
 ![Docker PS](dockerps.jpg)
 
 ### Target Machines & Beats
@@ -96,19 +100,106 @@ SSH into the control node and follow the steps below:
 **Filebeat**
 - Copy the [filebeat-config.yml](filebeat-config.yml) file to /etc/ansible/.
 - Update the [filebeat-config.yml](filebeat-config.yml) file to include Elk machine Private IP address in line 5 and 9.
-- Run ansible-playbook filebeat-config.yml, and navigate to http://(Elk machine Public IP address):5601 to check that the installation worked as expected.
+- Run `ansible-playbook filebeat-config.yml`, and navigate to http://(Elk machine Public IP address):5601 to check that the installation worked as expected.
 
 **Metricbeat**
 - Copy the [metricbeat.yml](metricbeat.yml) file to /etc/ansible/.
 - Update the [metricbeat.yml](metricbeat.yml) file to include Elk machine Private IP address in line 2 and 6 as well as username and password in line 3 and 4.
 - Run `ansible-playbook metricbeat.yml`, and navigate to http://(Elk machine Public IP address):5601 to check that the installation worked as expected.
 
-_**Bonus**, the specific commands the user will need to run to download the playbook, update are_
+
+**Bonus**, _the specific commands needed to download the playbooks_
 ```
 -------Filebeat---------
 
-- To create the filebeat-configuration.yml file: `nano filebeat-configuration.yml`. For this, I used the filebeat configuration file template.
+(1) To create the filebeat-playbook.yml file: `nano filebeat-configuration.yml`. For this, I used the filebeat configuration file template.
 
-- To create the playbook: `nano filebeat-playbook.yml`
+(2) To create the playbook: `nano filebeat-playbook.yml`
+
+---
+- name: Installing and Launch Filebeat
+  hosts: webservers
+  become: yes
+  tasks:
+    # Use command module
+  - name: Download filebeat .deb file
+    command: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.4.0-amd64.deb
+
+    # Use command module
+  - name: Install filebeat .deb
+    command: dpkg -i filebeat-7.4.0-amd64.deb
+
+    # Use copy module
+  - name: Drop in filebeat.yml
+    copy:
+      src: /etc/ansible/filebeat-config.yml
+      dest: /etc/filebeat/filebeat.yml
+
+    # Use command module
+  - name: Enable and Configure System Module
+    command: filebeat modules enable system
+
+    # Use command module
+  - name: Setup filebeat
+    command: filebeat setup
+
+    # Use command module
+  - name: Start filebeat service
+    command: service filebeat start
+
+    # Use systemd module
+  - name: Enable service filebeat on boot
+    systemd:
+      name: filebeat
+      enabled: yes
+
+(3) Run playbook: ansible-playbook filebeat-playbook.yml
+```
+
+```
+-------Metricbeat-------
+
+(1) To create the metricbeat-playback.yml file: nano metricbeat-configuration.yml. For this, I used the metricbeat configuration file template.
+
+(2) To create the playbook: `nano metricbeat-playback.yml`
+
+---
+- name: Installing and Launch Metricbeat
+  hosts: webservers
+  become: yes
+  tasks:
+    # Use command module
+  - name: Download filebeat .deb file
+    command: curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.6.1-amd64.deb
+
+    # Use command module
+  - name: Install metricbeat .deb
+    command: dpkg -i metricbeat-7.6.1-amd64.deb
+
+    # Use copy module
+  - name: Drop in filebeat.yml
+    copy:
+      src: /etc/ansible/metricbeat.yml
+      dest: /etc/metricbeat/metricbeat.yml
+
+    # Use command module
+  - name: Enable and Configure System Module
+    command: metricbeat modules enable docker
+
+    # Use command module
+  - name: Setup metricbeat
+    command: metricbeat setup
+
+    # Use command module
+  - name: Start metricbeat service
+    command: service metricbeat start
+
+    # Use systemd module
+  - name: Enable service metricbeat on boot
+    systemd:
+      name: metricbeat
+      enabled: yes
+      
+(3) Run the playbook: ansible-playbook metricbeat-playback.yml
 
 ```
