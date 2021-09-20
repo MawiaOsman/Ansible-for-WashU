@@ -1,4 +1,4 @@
-## ELK-Stack-Project
+## Automated ELK Stack Deployment Project
 
 The files in this repository were used to configure the network depicted below.
 
@@ -44,34 +44,36 @@ The configuration details of each machine may be found below.
 
 The machines on the internal network are not exposed to the public Internet. 
 
-Only the Jump Box machine can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:
-- _35.129.XXX.X_
+Only the Jump Box machine can accept connections from the Internet. Access to this machine is only allowed from my home IP addresses:
+- _35.12x.xxx.x_
 
-Machines within the network can only be accessed by my home IP address.
-- _TODO: Which machine did you allow to access your ELK VM? What was its IP address?_
-- _ was used to access my Elk-VM with an IP address of_
+Machines within the network can only be accessed by IP address.
+- _My home laptop was used to access my Elk-VM with my home IP address_
 
 A summary of the access policies in place can be found in the table below.
 
 | Name     | Publicly Accessible | Allowed IP Addresses |
 |----------|---------------------|----------------------|
-| Jump Box | Yes                 | 52.247.XXX.XX        |
+| Jump Box | Yes                 | 52.247.xxx.xx        |
 | Web-1    | No                  | 10.0.0.6             |
 | Web-2    | No                  | 10.0.0.7             |
 
 ### Elk Configuration
 
-Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because...
-- _TODO: What is the main advantage of automating configuration with Ansible?_
+Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because _it allows setups within minutes and can be customizable based on needs._
 
 The playbook implements the following tasks:
-- _TODO: In 3-5 bullets, explain the steps of the ELK installation play. E.g., install Docker; download image; etc._
-- ...
-- ...
+- _Create Elk VM_
+- _Configure the hosts file found in /etc/ansible/ to Add the Elk VM and Increase Virtual Memory_
+- _Install Docker.io_
+- _Install Python-pip_
+- _Install Docker_
+- _Download and Launch the Elk Docker Container_
+- _Published Ports 5601, 9200, and 5044_
 
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
-![docker ps output](docker ps.jpg "Docker PS")
+![Docker PS](dockerps.jpg)
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
@@ -83,19 +85,30 @@ We have installed the following Beats on these machines:
 - _Metricbeat_
 
 These Beats allow us to collect the following information from each machine:
-- _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+-_Filebeat collects log events and log files such as Apache and web servers_
+-_Metericbeat collects metrics from the system and services that are running such as HAProxy. It also monitors such as filesystem stats, memory stats and VM stats_
 
 ### Using the Playbook
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the _____ file to _____.
-- Update the _____ file to include...
-- Run the playbook, and navigate to ____ to check that the installation worked as expected.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
+**Filebeat**
+- Copy the [filebeat-config.yml](filebeat-config.yml) file to /etc/ansible/.
+- Update the [filebeat-config.yml](filebeat-config.yml) file to include Elk machine Private IP address in line 5 and 9.
+- Run ansible-playbook filebeat-config.yml, and navigate to http://(Elk machine Public IP address):5601 to check that the installation worked as expected.
 
-_As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update 
+**Metricbeat**
+- Copy the [metricbeat.yml](metricbeat.yml) file to /etc/ansible/.
+- Update the [metricbeat.yml](metricbeat.yml) file to include Elk machine Private IP address in line 2 and 6 as well as username and password in line 3 and 4.
+- Run `ansible-playbook metricbeat.yml`, and navigate to http://(Elk machine Public IP address):5601 to check that the installation worked as expected.
+
+_**Bonus**, the specific commands the user will need to run to download the playbook, update are_
+```
+-------Filebeat---------
+
+- To create the filebeat-configuration.yml file: `nano filebeat-configuration.yml`. For this, I used the filebeat configuration file template.
+
+- To create the playbook: `nano filebeat-playbook.yml`
+
+```
