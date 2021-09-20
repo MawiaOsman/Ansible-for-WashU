@@ -1,0 +1,9 @@
+output.elasticsearch:
+  hosts: ["10.1.0.4"]
+  username: "elastic"
+  password: "changeme"
+setup.kibana:
+  host: "10.1.0.4"
+metricbeat.config.modules:
+  enabled: true
+  path: ${path.config}/modules.d/*.yml
