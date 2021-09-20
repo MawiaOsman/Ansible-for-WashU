@@ -32,7 +32,6 @@ Integrating an ELK server allows users to easily monitor the vulnerable VMs for 
 - _Metricbeat records the metric data and statistics of a server_
 
 The configuration details of each machine may be found below.
-_Note: Use the [Markdown Table Generator](http://www.tablesgenerator.com/markdown_tables) to add/remove values from the table_.
 
 | Name     | Function | IP Address | Operating System |
 |----------|----------|------------|------------------|
@@ -45,19 +44,20 @@ _Note: Use the [Markdown Table Generator](http://www.tablesgenerator.com/markdow
 
 The machines on the internal network are not exposed to the public Internet. 
 
-Only the _____ machine can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:
-- _TODO: Add whitelisted IP addresses_
+Only the Jump Box machine can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:
+- _35.129.XXX.X_
 
-Machines within the network can only be accessed by _____.
+Machines within the network can only be accessed by my home IP address.
 - _TODO: Which machine did you allow to access your ELK VM? What was its IP address?_
+- _ was used to access my Elk-VM with an IP address of_
 
 A summary of the access policies in place can be found in the table below.
 
 | Name     | Publicly Accessible | Allowed IP Addresses |
 |----------|---------------------|----------------------|
-| Jump Box | Yes/No              | 10.0.0.6 10.0.0.7    |
-|          |                     |                      |
-|          |                     |                      |
+| Jump Box | Yes                 | 52.247.XXX.XX        |
+| Web-1    | No                  | 10.0.0.6             |
+| Web-2    | No                  | 10.0.0.7             |
 
 ### Elk Configuration
 
@@ -71,7 +71,7 @@ The playbook implements the following tasks:
 
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
-1[docker ps output](docker ps.jpg "Docker PS")
+![docker ps output](docker ps.jpg "Docker PS")
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
